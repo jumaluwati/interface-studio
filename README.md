@@ -2,7 +2,7 @@
 
 Interface Studio is a local web dashboard for exploring Cisco Catalyst Center interface inventory. It connects to Catalyst Center, lists devices, loads interfaces for selected devices, visualizes port status, and lets users download custom reports for selected devices and interfaces.
 
-The project also includes a CLI helper (`get_interfaces.py`) for users who prefer terminal output plus CSV/JSON exports.
+Most users should run the web app only. The project also includes an optional CLI helper (`get_interfaces.py`) for advanced users who want a quick terminal export, scripted collection, or troubleshooting output without opening the browser dashboard.
 
 ## Features
 
@@ -84,7 +84,16 @@ export DNAC_PASS="your-password"
 
 Do not commit `.env` files or credentials. The `.gitignore` file excludes common local secret files.
 
-## Run The CLI Helper
+## Optional CLI Helper
+
+Most users do not need this section. Use the web app above for the normal dashboard, filtering, port map, and report download workflow.
+
+The CLI helper is included only for these cases:
+
+- Quick CSV/JSON export from the terminal
+- Automated or scheduled interface collection
+- Troubleshooting Catalyst Center API responses
+- Working on a system where a browser is not available
 
 Interactive mode:
 
