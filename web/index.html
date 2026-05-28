@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Interface Studio</title>
+    <link rel="stylesheet" href="/styles.css?v=20260527" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">Catalyst Center</div>
+        <h1>Interface Studio</h1>
+      </div>
+      <div class="top-actions">
+        <button id="refreshInterfacesBtn" class="quiet" type="button" disabled>Refresh</button>
+        <button id="downloadReportBtnTop" class="primary" type="button" disabled>Download Report</button>
+      </div>
+    </header>
+
+    <nav class="workflow-stepper" aria-label="Workflow">
+      <span data-step="connect">Connect</span>
+      <span data-step="select">Select Devices</span>
+      <span data-step="load">Load Interfaces</span>
+      <span data-step="report">Build Report</span>
+    </nav>
+
+    <main class="app-shell">
+      <aside class="left-rail">
+        <section class="panel connection-panel">
+          <div class="panel-heading">
+            <h2>Connection</h2>
+            <span id="connectionState" class="state-dot idle">Not connected</span>
+          </div>
+          <label>
+            <span>Host</span>
+            <input id="hostInput" autocomplete="off" placeholder="catalyst-center.example.com" />
+          </label>
+          <div class="two-col">
+            <label>
+              <span>User</span>
+              <input id="userInput" autocomplete="username" placeholder="admin" />
+            </label>
+            <label>
+              <span>Password</span>
+              <input id="passwordInput" type="password" autocomplete="current-password" />
+            </label>
+          </div>
+          <label class="toggle-row">
+            <input id="verifyTlsInput" type="checkbox" />
+            <span>Verify TLS certificate</span>
+          </label>
+          <button id="connectBtn" class="primary full" type="button">Connect</button>
+        </section>
+
+        <section class="panel devices-panel">
+          <div class="panel-heading">
+            <h2>Devices</h2>
+            <span id="deviceCount" class="count-pill">0</span>
+          </div>
+          <div id="deviceFilter" class="segmented-control" aria-label="Device type filter">
+            <button class="active" type="button" data-filter="switches">Switches</button>
+            <button type="button" data-filter="wireless">Wireless</button>
+            <button type="button" data-filter="all">All</button>
+          </div>
+          <div class="search-field">
+            <input id="deviceSearch" placeholder="Search devices" />
+          </div>
+          <div class="device-tools">
+            <button id="selectAllDevicesBtn" class="quiet" type="button" disabled>Select All</button>
+            <button id="clearDevicesBtn" class="quiet" type="button" disabled>Clear</button>
+          </div>
+          <div id="deviceList" class="device-list empty-state">
+            Connect to see devices.
+          </div>
+          <button id="loadInterfacesBtn" class="primary full" type="button" disabled>Load Interfaces</button>
+        </section>
+      </aside>
+
+      <section class="workspace">
+        <section class="summary-strip" aria-label="Interface summary">
+          <button class="metric metric-action" type="button" data-metric-filter="all">
+            <span>Total</span>
+            <strong id="totalMetric">0</strong>
+            <small id="totalPercentMetric">No data</small>
+          </button>
+          <button class="metric metric-action up" type="button" data-metric-filter="up">
+            <span>Up</span>
+            <strong id="upMetric">0</strong>
+            <small id="upPercentMetric">0% on</small>
+          </button>
+          <button class="metric metric-action down" type="button" data-metric-filter="down">
+            <span>Down</span>
+            <strong id="downMetric">0</strong>
+            <small id="downPercentMetric">0% off</small>
+          </button>
+          <button class="metric metric-action selected" type="button" data-metric-filter="selected">
+            <span>Selected</span>
+            <strong id="selectedMetric">0</strong>
+            <small id="selectedPercentMetric">0% selected</small>
+          </button>
+        </section>
+
+        <section class="visual-panel panel">
+          <div class="table-heading">
+            <div>
+              <h2>Port Map</h2>
+              <p id="portMapSubtitle">Ports appear here after interfaces load.</p>
+            </div>
+            <div class="legend">
+              <span><i class="legend-up"></i>Up</span>
+              <span><i class="legend-down"></i>Down</span>
+              <span><i class="legend-other"></i>Other</span>
+              <span><i class="legend-selected"></i>Selected</span>
+            </div>
+          </div>
+          <div class="status-distribution" aria-label="Interface status distribution">
+            <span id="statusUpSegment" class="status-segment segment-up"></span>
+            <span id="statusDownSegment" class="status-segment segment-down"></span>
+            <span id="statusOtherSegment" class="status-segment segment-other"></span>
+          </div>
+          <div id="portMap" class="port-map empty-state">Load interfaces to see a visual port map.</div>
+        </section>
+
+        <section class="toolbar panel">
+          <div class="search-field wide">
+            <input id="interfaceSearch" placeholder="Search port, VLAN, MAC, description, device" />
+          </div>
+          <select id="statusFilter" aria-label="Status filter">
+            <option value="all">Any status</option>
+            <option value="up">Status up</option>
+            <option value="down">Status down</option>
+          </select>
+          <select id="typeFilter" aria-label="Type filter">
+            <option value="all">Any type</option>
+            <option value="Physical">Physical</option>
+            <option value="Virtual">Virtual</option>
+          </select>
+          <input id="vlanFilter" class="small-input" placeholder="VLAN" />
+          <label class="toggle-row compact">
+            <input id="selectedOnlyFilter" type="checkbox" />
+            <span>Selected only</span>
+          </label>
+          <button id="selectVisibleBtn" class="quiet" type="button" disabled>Select Visible</button>
+          <button id="clearInterfacesBtn" class="quiet" type="button" disabled>Clear</button>
+        </section>
+
+        <section class="table-panel panel">
+          <div class="table-heading">
+            <div>
+              <h2>Interfaces</h2>
+              <p id="tableSubtitle">Load a device to see interface details.</p>
+            </div>
+            <span id="visibleCount" class="count-pill">0 visible</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th class="select-col"></th>
+                  <th>Port</th>
+                  <th>Device</th>
+                  <th>Status</th>
+                  <th>Admin</th>
+                  <th>VLAN</th>
+                  <th>Speed</th>
+                  <th>Duplex</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody id="interfaceTable">
+                <tr>
+                  <td colspan="9" class="empty-cell">No interfaces loaded.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <aside id="reportPanel" class="right-rail panel report-panel is-empty">
+        <div class="panel-heading">
+          <h2>Report</h2>
+          <span id="reportScopeCount" class="count-pill">0 rows</span>
+        </div>
+        <p id="reportHint" class="report-hint">Load interfaces to build a custom report.</p>
+        <label>
+          <span>Title</span>
+          <input id="reportTitle" value="Catalyst Center Interface Report" />
+        </label>
+        <label>
+          <span>Scope</span>
+          <select id="reportScope">
+            <option value="selected">Selected interfaces</option>
+            <option value="visible">Current filtered view</option>
+            <option value="all">All loaded interfaces</option>
+          </select>
+        </label>
+        <label>
+          <span>Format</span>
+          <select id="reportFormat">
+            <option value="html">Readable HTML</option>
+            <option value="csv">Spreadsheet CSV</option>
+            <option value="json">Raw JSON</option>
+          </select>
+        </label>
+        <label class="toggle-row">
+          <input id="includeSummary" type="checkbox" checked />
+          <span>Include executive summary</span>
+        </label>
+        <div class="field-list" id="fieldList"></div>
+        <button id="downloadReportBtn" class="primary full" type="button" disabled>Download Report</button>
+      </aside>
+    </main>
+
+    <aside id="detailDrawer" class="detail-drawer" aria-hidden="true">
+      <div class="drawer-head">
+        <div>
+          <span id="drawerDevice" class="eyebrow">Device</span>
+          <h2 id="drawerTitle">Interface</h2>
+        </div>
+        <button id="closeDrawerBtn" class="icon-button" type="button" aria-label="Close">×</button>
+      </div>
+      <div id="drawerStatus" class="drawer-status"></div>
+      <div id="drawerBody" class="drawer-body"></div>
+    </aside>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script src="/app.js?v=20260527"></script>
+  </body>
+</html>

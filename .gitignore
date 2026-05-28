@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# Local environment / secrets
+.env
+*.env
+
+# Generated interface exports
+interfaces_*.json
+interfaces_*.csv
+
+# OS / editor noise
+.DS_Store
+.vscode/
+.idea/
+
+# Logs
+*.log
